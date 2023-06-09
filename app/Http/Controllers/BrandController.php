@@ -16,31 +16,23 @@ use Illuminate\Http\Request;
 
 class BrandController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+
+    // view Load function
+
+
     public function index()
     {
         $brand = brand::all();
 
-        return view('admin.brand',['brand'=>$brand]);
+        return view('admin.brand.index',['brand'=>$brand]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
 
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
+    //  add brand function
+
     public function add_brand(Request $request)
     {
         $result = brand::where(['brand'=>$request->brand])->first();
@@ -50,27 +42,14 @@ class BrandController extends Controller
         $model = new brand;
         $model->brand = $request->brand;
         $model->save();
-        return 1;
+         return $model;
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\brand  $brand
-     * @return \Illuminate\Http\Response
-     */
-    public function show(brand $brand)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\brand  $brand
-     * @return \Illuminate\Http\Response
-     */
+
+
+
     public function edit_brand(Request $request)
     {
         $id = $request->id;

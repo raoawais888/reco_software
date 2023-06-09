@@ -38,41 +38,13 @@
       </div>
       <div class="modal-body">
         <form id="product_from">
-
-
-          <div class="form-group">
-            <label for="recipient-name" class="col-form-label">Select Brand</label>
-           <select name="brand" required id="brand_id" class="form-control">
-            <option value=""  disabled selected>Select Brand</option>
-
-            @forelse ($brand as $item)
-                <option value="{{$item->id}}">{{$item->brand}}</option>
-            @empty
-                <h2>Record Not Found</h2>
-            @endforelse
-           </select>
-          </div>
-          <div id="brand_error"></div>
-          <div class="form-group">
-            <label for="recipient-name" class="col-form-label">Select Category</label>
-           <select name="category" id="category_id" class="form-control" required>
-            <option value=""  disabled selected>Select Category</option>
-
-            @forelse ($category as $item)
-                <option value="{{$item->id}}">{{$item->category}}</option>
-            @empty
-                <h2>Record Not Found</h2>
-            @endforelse
-           </select>
-          </div>
-          <div id="category_error"></div>
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">Product Name</label>
             <input type="text" class="form-control" id="name" name="name" required>
+            <div id="name_error"></div>
           </div>
-          <div id="name_error"></div>
-
       </div>
+
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="submit" id="add_product_btn" class="btn btn-primary">Add Product</button>
@@ -110,7 +82,7 @@
               <div class="card shadow">
                 <div class="card-body">
                    {{-- table --}}
-                  <table class="table  hover multiple-select-row nowrap" id="dataTable-1">
+                  <table class="table  hover multiple-select-row nowra product_table" id="dataTable-1">
                     <thead>
                       <tr>
                         <th>Sr #</th>
@@ -161,42 +133,23 @@
 
 
 $(document).ready(function(){
+
 $("#add_product_btn").on("click",function(e){
-
-
-
-
-
-
-
+   e.preventDefault();
 
     let name = $("#name").val();
-    let category_id = $("#category_id").val();
-    let brand_id = $("#brand_id").val();
-
-
-
 
      if(name == ""){
 
         $("#name_error").html("Please Enter the Product").css("color","red");
         return false;
 
-     }else if(category_id == ""){
-        $("#category_error").html("Please Select The category").css("color","red");
-        return false;
-     }else if(brand_id == ""){
-        $("#brand_error").html("Please Select The brand").css("color","red");
-        return false
      }
-
-
-
 
     $.ajax({
        url:"{{url('add_product')}}",
        type:"get",
-       data:{name:name,category_id:category_id , brand_id:brand_id},
+       data:{name:name},
        beforeSend:function(){
 
         $('.loader').css("visibility","visible");
@@ -208,28 +161,30 @@ $("#add_product_btn").on("click",function(e){
       location.reload();
        },
        success:function(data){
+        console.log(data);
+        const htmlTR = `
 
-        if(data == 1){
-          Swal.fire(
-      'Produc Added',
-      '',
-      'success'
-    )
-        }else if(data == 2){
-          Swal.fire(
-      'Product Name Already Exits',
-      '',
-      'error'
-    )
-        }else{
-          Swal.fire(
-      'Something Wrong',
-      '',
-      'error'
-    )
+        <tr role="row" class="odd">
+                <td class="sorting_1">Added</td>
+                <td>${data.brand}</td>
+                <td>  <a class="btn btn-success" href="#" id="category_edit" data-ceid="${data.id}">Edit</a></td>
+                <td>
+                <a class="btn btn-danger" href="#" id="category_remove" data-crid="${data.id}">Remove</a></td>
+            </tr>
+        `;
+
+
+
+        $('.close').trigger("click");
+        Swal.fire('Product Added','','success')
+        $('.product_table').prepend(htmlTR);
+
+
+      if(data==0){
+        Swal.fire('Product Already Exist','','error')
+      }
+
         }
-
-       }
 
 
 
