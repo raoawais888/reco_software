@@ -60,6 +60,20 @@ Route::get('dashboard', function () {
     return view('admin.dashboard');
 });
 
+
+// Routes Product
+
+
+
+Route::get('product',[ProductController::class,'index']);
+Route::get('add_product',[ProductController::class,'store']);
+Route::get('product_remove',[ProductController::class,'product_remove']);
+Route::get('edit_product',[ProductController::class,'edit_product']);
+Route::get('update_product',[ProductController::class,'update_product']);
+
+
+
+
 // category routes start
 
 
@@ -68,8 +82,7 @@ Route::post('add_category',[CategoryController::class,'add_category'] );
 Route::post('edit_category',[CategoryController::class,'edit_category'] );
 Route::get('update_category',[CategoryController::class,'update_category'] );
 Route::post('remove_category',[CategoryController::class,'remove_category'] );
-Route::post('active_category',[CategoryController::class,'active_category'] );
-Route::post('deactive_category',[CategoryController::class,'deactive_category'] );
+
 
 
 
@@ -79,8 +92,7 @@ Route::post('add_brand',[BrandController::class,'add_brand'] );
 Route::post('edit_brand',[BrandController::class,'edit_brand'] );
 Route::get('update_brand',[BrandController::class,'update_brand'] );
 Route::post('remove_brand',[BrandController::class,'remove_brand'] );
-Route::post('active_brand',[BrandController::class,'active_brand'] );
-Route::post('deactive_brand',[BrandController::class,'deactive_brand'] );
+
 
 
 // category routes start
@@ -358,15 +370,7 @@ Route::get('today_activity',[ReportController::class,'today_activity']);
 Route::post('today_activity',[ReportController::class,'today_activity_store']);
 // Route::get('profit_year',[ReportController::class,'profit_year']);
 
-// Routes Product
 
-
-
-Route::get('product',[ProductController::class,'index']);
-Route::get('add_product',[ProductController::class,'store']);
-Route::get('product_remove',[ProductController::class,'product_remove']);
-Route::get('edit_product',[ProductController::class,'edit_product']);
-Route::get('update_product',[ProductController::class,'update_product']);
 
 // Routes  edit stock manage
 

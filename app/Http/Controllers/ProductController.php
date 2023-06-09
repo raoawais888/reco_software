@@ -26,39 +26,21 @@ class ProductController extends Controller
     {
 
         $product = product::all();
-        $category = category::all();
-        $brand = brand::all();
-        return view('admin.product',['product'=>$product,'category'=>$category,'brand'=>$brand]);
+        return view('admin.product.index',['product'=>$product]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
           $check = product::where(['name'=>$request->name])->first();
           if($check){
-              return 2;
+              return 0;
           }else{
               $model = new product();
               $model->name = $request->name;
-              $model->category_id = $request->category_id;
-              $model->brand_id = $request->brand_id;
               $model->save();
-              return 1;
+              return $model;
           }
     }
 

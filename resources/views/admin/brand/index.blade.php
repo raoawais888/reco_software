@@ -5,7 +5,7 @@ use App\Models\entry;
 @extends('layout.master')
 
 @section('main-content')
-    
+
 {{-- edit model start here  --}}
 
 <div class="modal fade" id="exampleModal_edit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -18,7 +18,7 @@ use App\Models\entry;
         </button>
       </div>
       <div class="modal-body" id="edit_brand_form">
-       
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -46,7 +46,7 @@ use App\Models\entry;
             <label for="recipient-name" class="col-form-label">Brand Name</label>
             <input type="text" class="form-control" id="brand_name" name="brand">
           </div>
-          
+
         </form>
       </div>
       <div class="modal-footer">
@@ -68,14 +68,14 @@ use App\Models\entry;
                 </div>
                 <div class="col-md-2">
 
-                    
+
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Add Brand</button>
-                    
+
           <button type="button" class="btn btn-primary d-none" id="update_btn" data-toggle="modal" data-target="#exampleModal_edit" data-whatever="@mdo">update Category</button>
                 </div>
             </div>
-          
-          
+
+
 
           <div class="row my-4">
             <!-- Small table -->
@@ -83,46 +83,43 @@ use App\Models\entry;
               <div class="card shadow">
                 <div class="card-body">
                   <!-- table -->
-                  <table class="table  hover multiple-select-row nowrap" id="dataTable-1">
+                  <table class="table  hover multiple-select-row nowrap brand_table" id="dataTable-1">
                     <thead>
                       <tr>
                         <th>Sr #</th>
                         <th>Brand Name</th>
-                        <th>QTY</th>
                         <th>Edit</th>
                         <th>Delete</th>
                       </tr>
                     </thead>
                     <tbody>
                         @php
-                        $sr=0;    
-                       
+                        $sr=0;
+
                         $qty_sum = 0;
                         @endphp
                         @foreach ($brand as $data)
-                        
+
                         @php
-                            $sr++; 
-                            
-                            
-                            
+                            $sr++;
+
+
+
                         @endphp
-                           
-                        
+
+
                       <tr>
                         <td>{{$sr}}</td>
                         <td>{{$data->brand}}</td>
-                        <td>{{$data->qty}}</td>
-                       
                           <td>  <a class="btn btn-success" href="#" id="brand_edit" data-beid="{{$data->id}}">Edit</a></td>
                           <td>
                           <a class="btn btn-danger" href="#" id="brand_remove" data-brid="{{$data->id}}">Remove</a></td>
 
-                        
+
                       </tr>
                       @endforeach
-                      
-                      
+
+
                     </tbody>
                   </table>
                 </div>
@@ -132,8 +129,8 @@ use App\Models\entry;
         </div> <!-- .col-12 -->
       </div> <!-- .row -->
     </div> <!-- .container-fluid -->
-    
-    
+
+
   </main> <!-- main -->
 </div> <!-- .wrapper -->
 <script src="{{asset('js/jquery.min.js')}}"></script>
@@ -144,7 +141,7 @@ use App\Models\entry;
         $("#add_brand_btn").on("click",function(e){
       e.preventDefault();
       let brand = $("#brand_name").val();
-      
+
       if(brand==""){
 
          $("#brand").css("borderColor","red");
@@ -170,22 +167,27 @@ use App\Models\entry;
 
     },
     success:function(data){
-      
-      if(data==1){
-        Swal.fire(
-      'Brand Added',
-      '',
-      'success'
-    )
 
-          location.reload();
-      }else{
-        
-        Swal.fire(
-      'Brand Already Exist',
-      '',
-      'error'
-    )
+        const htmlTR = `
+
+<tr role="row" class="odd">
+         <td class="sorting_1">Added</td>
+         <td>${data.brand}</td>
+           <td>  <a class="btn btn-success" href="#" id="category_edit" data-ceid="${data.id}">Edit</a></td>
+           <td>
+           <a class="btn btn-danger" href="#" id="category_remove" data-crid="${data.id}">Remove</a></td>
+       </tr>
+`;
+
+
+
+$('.close').trigger("click");
+Swal.fire('Brand Added','','success')
+$('.brand_table').prepend(htmlTR);
+
+
+      if(data==0){
+        Swal.fire('Brand Already Exist','','error')
       }
 
 
@@ -195,7 +197,7 @@ use App\Models\entry;
 
           });
       }
-        
+
 
 
 
@@ -203,10 +205,11 @@ use App\Models\entry;
         })
 
 
-// category Eidt 
+// category Eidt
 $(document).on("click","#brand_edit",function(e){
 e.preventDefault();
 let id = $(this).attr("data-beid");
+tr = $(this).closest("tr");
 
 $.ajax({
         headers: {
@@ -218,16 +221,16 @@ $.ajax({
     success:function(data){
             $("#edit_brand_form").html(data);
             $("#update_btn").trigger("click");
-        
+
     }
 
 
      });
 });
- 
 
 
-//  UPDATE CATEGORY 
+
+//  UPDATE CATEGORY
 
 
 $("#update_brand_btn").on("click",function(e){
@@ -246,30 +249,28 @@ $.ajax({
       $("#edit_loader").hide();
     },
     success:function(data){
-           
-      if(data==1){
-        Swal.fire(
-      'Brand Updated',
-      '',
-      'success'
-    )
 
-          location.reload();
+      if(data==1){
+        $(".close").trigger("click");
+        Swal.fire('Brand Updated','','success')
+        tr.css("background","#FCE9F1");
+
       }
     }
 
 
      });
 });
- 
 
 
 
-// category remove 
+
+// category remove
 
 $(document).on("click","#brand_remove",function(e){
 e.preventDefault();
 let id = $(this).attr("data-brid");
+let element = this;
 Swal.fire({
   title: 'Are you sure?',
   text: "You won't be able to revert this Brand and also all Product entry Delete belong to this category!",
@@ -290,13 +291,9 @@ Swal.fire({
     success:function(data){
         if(data==1){
 
-          Swal.fire(
-      'Brand Remove',
-      '',
-      'success'
-    )
+          Swal.fire('Brand Remove','','success')
+          $(element).closest("tr").slideUp(500);
 
-          location.reload();
         }
     }
 

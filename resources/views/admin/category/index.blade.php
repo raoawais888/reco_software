@@ -205,6 +205,11 @@ $(document).on("click","#category_edit",function(e){
 e.preventDefault();
 let id = $(this).attr("data-ceid");
 
+//   pass to lower function hold tr for remove
+
+   tr = $(this).closest("tr");
+
+
 $.ajax({
         headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -229,6 +234,8 @@ $.ajax({
 
 $("#update_category_btn").on("click",function(e){
 e.preventDefault();
+
+
 $.ajax({
         headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -245,13 +252,10 @@ $.ajax({
     success:function(data){
 
       if(data==1){
-        Swal.fire(
-      'Category Updated',
-      '',
-      'success'
-    )
+        $(".close").trigger("click");
+        Swal.fire('Category Updated','','success')
+        tr.css("background","#FCE9F1");
 
-          location.reload();
       }
     }
 
