@@ -279,7 +279,7 @@ Route::post('remove_purchase_return',[PurchaseReturnController::class,'remove'])
 Route::get('add_sale_return',[SaleReturnController::class,'show']);
 Route::post('add_sale_return_show',[SaleReturnController::class,'store']);
 Route::get('sale_return',[SaleReturnController::class,'index']);
-Route::post('sale_return',[SaleReturnController::class,'update']);
+Route::post('store_sale_return',[SaleReturnController::class,'update']);
 Route::post('add_sale_return',[SaleReturnController::class,'store_sale_return']);
 Route::post('remove_bill_return',[SaleReturnController::class,'remove_bill_return']);
 Route::post('bill_return_edit',[SaleReturnController::class,'bill_return_edit']);

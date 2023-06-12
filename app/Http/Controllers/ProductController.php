@@ -151,16 +151,10 @@ class ProductController extends Controller
     {
 
 
-        $id = $request->id;
+      $id = $request->id;
+
+      dd($id);
        product::find($request->id)->delete();
-       stock::where(['product_id'=>$id])->delete();
-       saleReturn::where(['product_id'=>$id])->delete();
-       purchaseReturn::where(['product_id'=>$id])->delete();
-       purchase::where(['product_id'=>$id])->delete();
-       bill::where(['product_id'=>$id])->delete();
-       price::where(['product_id'=>$id])->delete();
-       entry::where(['product_id'=>$id])->delete();
-       entity::where(['product_id'=>$id])->delete();
        return 1;
 
 

@@ -158,18 +158,16 @@ $("#add_product_btn").on("click",function(e){
         setTimeout(() => {
         $('.loader').css("visibility","hidden");
       }, 1000);
-      location.reload();
        },
        success:function(data){
-        console.log(data);
         const htmlTR = `
 
         <tr role="row" class="odd">
                 <td class="sorting_1">Added</td>
-                <td>${data.brand}</td>
-                <td>  <a class="btn btn-success" href="#" id="category_edit" data-ceid="${data.id}">Edit</a></td>
+                <td>${data.name}</td>
+                <td>  <a class="btn btn-success" href="#" id="product_edit" data-peid="${data.id}">Edit</a></td>
                 <td>
-                <a class="btn btn-danger" href="#" id="category_remove" data-crid="${data.id}">Remove</a></td>
+                <a class="btn btn-danger" href="#" id="product_remove" data-prid="${data.id}">Remove</a></td>
             </tr>
         `;
 
@@ -222,19 +220,11 @@ complete:function(){
   success:function(data){
 
        if(data == 1){
-        Swal.fire(
-      'Product Remove',
-      '',
-      'success'
-    )
+        Swal.fire('Product Remove','','success')
 
     $("#product_remove").closest("tr").remove();
        }else{
-        Swal.fire(
-      'Something Wrong',
-      '',
-      'error'
-    )
+        Swal.fire('Something Wrong','','error')
 
        }
 
@@ -252,7 +242,7 @@ complete:function(){
 $(document).on("click","#product_edit",function(e){
 
 let id = $(this).attr("data-peid");
-
+ tr = $(this).closest("tr");
 $.ajax({
 
   url : "{{url('edit_product')}}",
@@ -278,23 +268,19 @@ $("#update_product_btn").on("click",function(e){
   e.preventDefault();
 
     let name = $("#edit_product").val();
-    let category_id = $("#category_id").val();
-    let brand_id = $("#brand_id").val();
     let id = $("#product_id ").val();
+    let element = this;
 
     $.ajax({
 
       url : "{{url('update_product')}}",
-      data:{id:id, name:name, category_id:category_id, brand_id:brand_id},
+      data:{id:id, name:name},
       success:function(data){
 
         if(data == 1){
-          Swal.fire(
-      'Updated',
-      '',
-      'success'
-    )
-    location.reload();
+          Swal.fire('Updated','','success')
+          $(element).closest("tr").slideUp(500);
+
         }
       }
 

@@ -17,7 +17,7 @@
       <form id='add_sale_return_from' method="POST">
         @csrf
       <div class="modal-body" id="sale_return_data">
-        
+
       </div>
     </form>
       <div class="modal-footer">
@@ -58,9 +58,9 @@
                   <strong class="card-title">Sale Return</strong>
                 </div>
                 <div class="card-body">
-                  
+
                     <form method="POST" id="sale_return_form" >
-                        @csrf 
+                        @csrf
                         <div class="row">
                           <div class="col-md-12">
                               <div class="form-group">
@@ -74,24 +74,24 @@
                                   <input type="text" class="form-control" name="bill_number" placeholder="" value="" required>
                                 </div>
                           </div>
-                          
-                          
+
+
                       </div>
-                          
-                          
-              
-                     
-                        
-                        
-              
-                          
+
+
+
+
+
+
+
+
                           <button type="submit"  id="sale_return_btn" class="btn btn-primary">Sale Return </button>
         <img src="loader.gif" alt="" id="loader">
-              
+
                       </div>
-                      
+
                       </form>
-               
+
 
                 </div> <!-- /.card-body -->
               </div> <!-- /.card -->
@@ -100,7 +100,7 @@
         </div> <!-- /.col-12 col-lg-10 col-xl-10 -->
       </div> <!-- .row -->
     </div> <!-- .container-fluid -->
-   
+
   </main> <!-- main -->
 
 
@@ -109,11 +109,12 @@
   <script>
     $(document).ready(function(){
 
-    
+
 $("#sale_return_btn").on("click",function(e){
   e.preventDefault();
+
   let form = $("#sale_return_form").serialize();
-  
+
 $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -123,8 +124,8 @@ $.ajax({
     data:form,
     success:function(data){
     //  console.log(data);
-$("#sale_return_data").html(data);
-$("#show_modal_box").trigger("click");
+  $("#sale_return_data").html(data);
+   $("#show_modal_box").trigger("click");
 
 
     }
@@ -133,39 +134,39 @@ $("#show_modal_box").trigger("click");
     });
 
 
-})    
-
-$("#purchase_return_save").on("click",function(){
-$("#update_purchase_from").submit();
-})
-$("#sale_return_save").on("click",function(){
-$("#add_sale_return_from").submit();
 })
 
-// $("#sale_return_save").on("click",function(e){
-//   e.preventDefault();
-//   $.ajax({
-//       headers: {
-//         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//     },
-//     url:"{{url('store_sale_return')}}",
-//     type:"POST",
-//     data:$("#add_sale_return_from").serialize(),
-//     success:function(data){
-     
-//       if(data==1){
-//         Swal.fire(
-//             'Sale Return Added',
-//             '',
-//             'success'
-//           )
-//       }
-//     }
 
 
-//     });
 
-// })
+
+
+
+$("#sale_return_save").on("click",function(e){
+  e.preventDefault();
+  alert("ok ok")
+  $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    url:"{{url('store_sale_return')}}",
+    type:"POST",
+    data:$("#add_sale_return_from").serialize(),
+    success:function(data){
+
+      if(data==1){
+        Swal.fire(
+            'Sale Return Added',
+            '',
+            'success'
+          )
+      }
+    }
+
+
+    });
+
+})
 
 
 })
