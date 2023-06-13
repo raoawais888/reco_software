@@ -21,10 +21,11 @@ class EntryController extends Controller
     public function index()
     {
 
-
+        $product = product::all();
+        $branch = branch::all();
         $entry = entity::orderBy('id', 'DESC')->with('category','brand','product','branch')->get();
         // dd($entry);
-       return view('admin.entry',compact('entry'));
+       return view('admin.entry.index',compact('entry','product','branch'));
 
     }
     public function check_stock()
@@ -37,14 +38,13 @@ class EntryController extends Controller
 
     }
 
-    public function show_add_entry(){
-        $entry = entity::all();
-        $product = product::all();
-        $brand = brand::all();
-        $category = category::all();
-        $branch = branch::all();
-        return view('admin.add_entry',compact('entry','product','brand','category','branch'));
-    }
+    // public function show_add_entry(){
+    //     $entry = entity::all();
+    //     $product = product::all();
+    //     $branch = branch::all();
+
+    //     return view('admin.entry.add_entry',compact('entry','product','branch'));
+    // }
 
     /**
      * Show the form for creating a new resource.
@@ -305,7 +305,7 @@ $output.="
 
 
 
-        $id = $request->entry_id;  
+        $id = $request->entry_id;
         $entity_old = entity::where('id',$id)->first();
         $branch = $entity_old->branch_id;
         $product = $entity_old->product_id;
@@ -448,7 +448,7 @@ $output.="
 
     public function edit_stock_delete(Request  $request){
 
-      
+
         $bid = $request->bid;
         $id = $request->id;
 
