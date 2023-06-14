@@ -209,7 +209,6 @@
 
     $("#add_entry_btn").on("click",function(e){
     e.preventDefault();
-
      let name = $("#product_id").val();
      let qty = $("#qty").val();
 
@@ -242,22 +241,13 @@
 
     },
     success:function(data){
-      if(data==1){
-        Swal.fire(
-      'Entry Added',
-      '',
-      'success'
-    )
 
-          location.reload();
-      }
-
-
+        Swal.fire('Entry Added','','success');
+        $(".close").trigger("click");
     }
 
 
-
-          });
+      });
          }
 
 
@@ -272,6 +262,8 @@ $(document).on("click","#entry_remove",function(e){
 
   e.preventDefault();
   let id = $(this).attr("data-erid");
+
+
 
 
   Swal.fire({
@@ -328,6 +320,7 @@ $(document).on("click","#entry_edit",function(e){
 
 e.preventDefault();
 let id = $(this).attr("data-eeid");
+tr = $(this).closest("tr");
 $.ajax({
 
   headers: {
@@ -371,13 +364,10 @@ $.ajax({
     success:function(data){
 
       if(data==1){
-        Swal.fire(
-      'Update!',
-      '',
-      'success'
-    )
+        Swal.fire('Update!','','success')
+        $(".close").trigger("click");
+        tr.css("background","#FCE9F1");
 
-  location.reload();
 
       }
     }
@@ -393,8 +383,7 @@ $(document).on("click","#entry_remove",function(e){
 
   e.preventDefault();
   let id = $(this).attr("data-erid");
-
-
+   let element = this;
   Swal.fire({
   title: 'Are you sure?',
   text: "You won't be able to revert this!",
@@ -416,13 +405,10 @@ $(document).on("click","#entry_remove",function(e){
     data:{id:id},
     success:function(data){
      if(data==1){
-        Swal.fire(
-      'Deleted!',
-      'Your file has been deleted.',
-      'success'
-    )
+        Swal.fire('Deleted!','Your file has been deleted.','success');
+        $(element).closest("tr").hide();
 
-    location.reload();
+
 
      }
 

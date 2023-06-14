@@ -453,7 +453,7 @@ class BillController extends Controller
     $branch = $request->branch;
     $bill = $request->bill_id;
     $sr = 0;
-    $old_bill_number = 0;
+
     $old_products = [];
     $new_products = [];
     $products = bill::where('bill_number', $bill)->get('product_id');
@@ -475,28 +475,29 @@ class BillController extends Controller
         $upd_qty = 0;
         if($entry_old->qty > 0){
         if ($old_bill->qty < $request->qty[$key]) {
-          $upd_qty = $request->qty[$key] - $old_bill->qty;
-          $update_qty =  $entry_old->qty - $upd_qty;
+          $upd_qty = floor($request->qty[$key] - $old_bill->qty);
+          $update_qty =  floor($entry_old->qty - $upd_qty);
           $entry_old->qty = $update_qty;
           $entry_old->update();
         }
         if ($old_bill->qty > $request->qty[$key]) {
-          $upd_qty = $old_bill->qty - $request->qty[$key];
-          $update_qty =  $entry_old->qty + $upd_qty;
+          $upd_qty = floor($old_bill->qty - $request->qty[$key]);
+          $update_qty =  floor($entry_old->qty + $upd_qty);
           $entry_old->qty = $update_qty;
           $entry_old->update();
           //test
         }
       }else{
+
           if ($old_bill->qty < $request->qty[$key]) {
-            $upd_qty = $request->qty[$key] - $old_bill->qty;
-            $update_qty =  $entry_old->qty + $upd_qty;
+            $upd_qty = floor($request->qty[$key] - $old_bill->qty);
+            $update_qty = floor($entry_old->qty - $upd_qty);
             $entry_old->qty = $update_qty;
             $entry_old->update();
           }
           if ($old_bill->qty > $request->qty[$key]) {
-            $upd_qty = $old_bill->qty - $request->qty[$key];
-            $update_qty =  $entry_old->qty - $upd_qty;
+            $upd_qty = floor($old_bill->qty - $request->qty[$key]);
+            $update_qty =  floor($entry_old->qty + $upd_qty);
             $entry_old->qty = $update_qty;
             $entry_old->update();
           }
@@ -520,7 +521,7 @@ class BillController extends Controller
       foreach ($db_diff_products as $key => $product) {
         $bill_data = bill::where('product_id', $product)->first();
         $entry_old = entry::where(['product_id' => $product, 'branch_id' => $bill_data->branch_id])->first();
-        $update_qty = $bill_data->qty + $entry_old->qty;
+        $update_qty = floor($bill_data->qty + $entry_old->qty);
         $entry_old->qty = $update_qty;
         $entry_old->update();
         $bill_data->delete();
@@ -558,7 +559,7 @@ class BillController extends Controller
       $entry = entry::where(['product_id' => $data, 'branch_id' => $branch])->first();
       $cut_qty = $entry->qty;
       $current_qty = $request->qty[$key];
-      $update_current_qty = $cut_qty - $current_qty;
+      $update_current_qty = floor($cut_qty - $current_qty);
       $entry->qty = $update_current_qty;
       $entry->update();
       // quatity minus from entry table end

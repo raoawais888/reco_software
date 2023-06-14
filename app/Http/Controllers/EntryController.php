@@ -62,28 +62,14 @@ class EntryController extends Controller
 
     public function add_entry(Request $request)
     {
-        $product_number= rand(1000000000,9999999999);
+
         $entry = entry::where(['product_id'=>$request->product_id, 'branch_id'=>$request->branch_id])->first();
-
-
-                 $number = entity::max('product_number');
-
-
-
-        $bill_number = 0;
-
-        if($number){
-        $bill_number = $number+1;
-        }
-         else{
-          $bill_number = 1;
-         }
 
 
              if($entry){
 
                 $old_qty = $entry->qty;
-                $total_qty = $old_qty + $request->qty;
+                 $total_qty = floor($old_qty + $request->qty);
                   $entry->qty = $total_qty;
                   $entry->update();
 
@@ -92,12 +78,8 @@ class EntryController extends Controller
                 $model = new entry;
                 $model->product_id = $request->product_id;
                 $model->date = $request->date;
-                $model->category_id = $request->category;
-                $model->unit = $request->unit;
-                $model->brand_id = $request->brand;
                 $model->branch_id = $request->branch_id;
                 $model->qty = $request->qty;
-                $model->product_number = $product_number;
                 $model->save();
 
             }
@@ -109,15 +91,11 @@ class EntryController extends Controller
                 $entity = new entity();
                 $entity->product_id = $request->product_id;
                 $entity->date = $request->date;
-                $entity->category_id = $request->category;
-                $entity->unit = $request->unit;
-                $entity->brand_id = $request->brand;
                 $entity->branch_id = $request->branch_id;
                 $entity->qty = $request->qty;
-                $entity->product_number = $bill_number;
                 $entity->save();
 
-                return 1;
+                return $entity;
 
 
 
@@ -150,8 +128,8 @@ class EntryController extends Controller
 
         $output.="
         <form id='update_entry_from'>
-    <div class='row'>
-        <div class='col-md-6'>
+        <div class='row'>
+        <div class='col-md-12'>
             <div class='form-group'>
                 <label for='recipient-name' class='col-form-label'>Date</label>
 
@@ -161,54 +139,9 @@ class EntryController extends Controller
               </div>
         </div>
 
-        <div class='col-md-6'>
 
-
-    <div class='form-group'>
-        <label for='recipient-name' class='col-form-label'>Brand</label>
-        <select name='brand' class='form-control'>
-              ";
-              foreach($brand as $data){
-
-                if($data->id == $result->brand_id){
-                    $output.=" <option selected value='{$data->id}'>{$data->brand}</option>";
-                }else{
-                    $output.=" <option value='{$data->id}'>{$data->brand}</option>";
-                }
-
-              }
-
-
-
-        $output.="
-        </select>
-      </div>
-        </div>
-    </div>
-    <div class='row'>
-        <div class='col-md-6'>
-            <div class='form-group'>
-                <label for='recipient-name' class='col-form-label'>Category</label>
-                <select name='category' id='category' class='form-control'>
-              ";
-              foreach($category as $data){
-
-                if($data->id == $result->category_id){
-                    $output.=" <option selected value='{$data->id}'>{$data->category}</option>";
-                }else{
-                    $output.=" <option value='{$data->id}'>{$data->category}</option>";
-                }
-
-              }
-
-
-
-        $output.="
-        </select>
-
-              </div>
-        </div>
-
+         </div>
+        <div class='row'>
         <div class='col-md-6'>
         <div class='form-group'>
         <label for='recipient-name' class='col-form-label'>Product Name</label>
@@ -231,21 +164,7 @@ $output.="
 
       </div>
     </div>
-    </div>
 
-
-
-    <div class='row'>
-
-
-    <div class='col-md-6'>
-    <div class='form-group'>
-        <label for='recipient-name' class='col-form-label'>Packing</label>
-
-
-        <input class='form-control' name='unit' value='{$result->unit}'>
-      </div>
-</div>
     <div class='col-md-6'>
     <div class='form-group'>
         <label for='recipient-name' class='col-form-label'>Qty</label>
@@ -253,7 +172,12 @@ $output.="
 
         <input class='form-control' name='qty' value='{$result->qty}'>
       </div>
-</div>
+
+
+    </div>
+
+
+
 
 
 <div class='col-md-12'>
@@ -318,7 +242,7 @@ $output.="
 
         $entry_qty = $entry->qty;
 
-        $updated_qty = $entry_qty  - $qty_old;
+        $updated_qty = floor($entry_qty  - $qty_old);
         // dd($updated_qty);
         $entry->qty = $updated_qty;
         $entry->update();
@@ -343,10 +267,7 @@ $output.="
                          $new_entry = new entry();
                         $new_entry->product_id = $request->product_id;
                         $new_entry->date = $request->date;
-                        $new_entry->category_id = $request->category;
-                        $new_entry->unit = $request->unit;
                         $new_entry->qty = $request->qty;
-                        $new_entry->brand_id = $request->brand;
                         $new_entry->branch_id = $branch_new ;
                         $new_entry->save();
 
@@ -355,7 +276,7 @@ $output.="
 
                        $up_qty = $update_entry->qty;
 
-                        $store_qty = $up_qty + $request->qty;
+                        $store_qty = floor($up_qty + $request->qty);
 
 
                         $update_entry->qty = $store_qty;
@@ -373,10 +294,7 @@ $output.="
             $model = entity::find($id);
             $model->product_id = $request->product_id;
             $model->date = $request->date;
-            $model->category_id = $request->category;
-            $model->unit = $request->unit;
             $model->qty = $request->qty;
-            $model->brand_id = $request->brand;
             $model->branch_id = $request->branch_id;
             $model->save();
             return 1;
@@ -414,35 +332,7 @@ $output.="
 
 
 
-    public function entry_category(Request $request){
 
-
-        $category = $request->category;
-
-       $output="";
-        $data = product::where(['category_id'=>$category])->get();
-
-        if(count($data)){
-
-
-               $output.="<select name='product_id' class='form-control'>";
-
-
-
-              foreach( $data as $category){
-
-
-                $output.="<option value='{$category->id}'>{$category->name}</option>";
-              }
-
-        }else{
-            $output.="<option> No Product Here Related This category</option>";
-        }
-
-          $output.=" </select>";
-
-        return  $output;
-    }
 
 
 
