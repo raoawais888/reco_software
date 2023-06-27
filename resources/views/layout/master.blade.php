@@ -112,7 +112,13 @@
                   <span class="ml-3 item-text">Product</span>
                 </a>
               </li>
-            <li class="nav-item dropdown">
+            <li class="nav-item">
+                <a class="nav-link" href="{{url('entry')}}">
+                    <i class='bx bx-edit'></i>
+                  <span class="ml-3 item-text">Entries</span>
+                </a>
+              </li>
+            {{-- <li class="nav-item dropdown">
               <a href="#tables" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
                 <i class='bx bx-edit'></i>
                 <span class="ml-3 item-text">Entry</span>
@@ -126,7 +132,7 @@
                 </li>
 
               </ul>
-            </li>
+            </li> --}}
             <li class="nav-item w-100">
               <a class="nav-link" href="{{url('category')}}">
                 <i class='bx bx-align-right'></i>

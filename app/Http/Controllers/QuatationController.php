@@ -90,9 +90,8 @@ class QuatationController extends Controller
     {
 
 
-     
 
-      $branch=  $request->branch;
+
       $number = quatation::max('bill_number');
 
 
@@ -115,10 +114,6 @@ class QuatationController extends Controller
             if($product== ""){
              return "error_product";
             }
-
-            
-
-
         }
 
 

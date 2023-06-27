@@ -161,7 +161,7 @@ p{
 }
 
 
-   
+
 
 .modal.fade .modal-dialog{
   margin: 0px !important;
@@ -221,7 +221,7 @@ p{
         z-index: 99999;
         visibility: hidden;
     }
-    
+
 
     .select2-container .select2-selection--single {
     box-sizing: border-box;
@@ -250,21 +250,21 @@ p{
     border: 1px solid #dee2e6;
     border-radius: 4px;
 }
-    
-    
+
+
     @media print {
- 
+
   .header_head .btn {
     display: none;
   }
   #save_btn{
       display:none;
   }
-  
+
   body{
       color:#000;
   }
-  
+
   .header h3{
     margin: 0;
     color:#000 !important;
@@ -333,7 +333,7 @@ body{
 }
 
 }
-    
+
 
 </style>
 
@@ -405,7 +405,7 @@ body{
             <div class="col-md-12">
               <div class="card shadow mb-4">
                 <div class="card-header">
-                  <strong class="card-title">Add Quatation Entry</strong>
+                  <strong class="card-title">Add Qoutation</strong>
                 </div>
                 <div class="card-body">
 
@@ -441,16 +441,15 @@ body{
                           <div class="row">
                               <div class="col-md-5">
                                   <div class="form-group">
-                                      <label for="">Product  Name</label>
+                                      <label for="product_data" >Product  Name</label>
 
 
-                                      <select name="name[]" id="product_data" class="form-control js-example-basic-single" required>
+
+                                      <select name="name[]" id="product_data" class="form-control p_select" data-placeholder="Select a Product" required>
 
                                         <option value="" disabled selected>Select Product</option>
 
                                             @foreach($product as $data)
-
-
                                             <option value="{{$data->id}}">{{$data->name}}</option>
 
                                             @endforeach
@@ -472,7 +471,7 @@ body{
                               </div>
 
 
-                              
+
                               <div class="col-md-2">
 
 
@@ -482,7 +481,7 @@ body{
                                  </div>
                               </div>
 
-                              
+
                               <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="">QTY</label>
@@ -552,11 +551,16 @@ body{
 
   </main> <!-- main -->
   <script src="{{asset('js/jquery.min.js')}}"></script>
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="{{asset("js/select2.min.js")}}"></script>
   <script>
 
 
    $(document).ready(function(){
+    setTimeout(() => {
+        $('.p_select').select2({});
+    }, 1000);
+
+
 
     $("#bill_form").validate({
       rules:{
@@ -616,7 +620,7 @@ complete:function(){
                 '',
                 'error'
                  )
-                 
+
              }else{
 
               $("#bill_form").trigger("reset");
@@ -648,10 +652,10 @@ complete:function(){
   var loop_count =1;
    $("#add_more_btn").on("click",function(e){
     e.preventDefault();
-    
+
   let product_clone = $("#product_data").html();
-  
-  
+
+
 
 loop_count++;
 var html_data ='<div class="w-100" id="attr_id'+loop_count+'">';
@@ -691,7 +695,7 @@ html_data +='<div class="row">';
 
   html_data +='</div>';
 
-  
+
 
 
   html_data+='<div class="col-md-12"><div class="form-group text-center">';
@@ -719,7 +723,7 @@ html_data +='<div class="row">';
 let id = $(this).attr("id");
   $("#attr_id"+id).remove();
 
-  $('.js-example-basic-single').select2();
+  $('.js-example-basic-single').select2({});
 });
 
 
@@ -732,7 +736,7 @@ let id = $(this).attr("id");
 
 
   $(document).ready(function(e){
-     
+
 
 
      $(document).on("change", "#product_data", function(e){
