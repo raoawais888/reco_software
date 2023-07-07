@@ -149,12 +149,14 @@ Route::get("bill_price",[BillController::class , "price"]);
 // quatation routes start
 
 
+
+
 Route::get('quotation',[QuatationController::class,'index'] );
-Route::post('quotation',[QuatationController::class,'update_quotation'] );
+// Route::post('quotation',[QuatationController::class,'update_quotation'] );
 Route::post('add_quotation',[QuatationController::class,'add_quotation'] );
 Route::get('add_quotation',[QuatationController::class,'add_quotation_show'] );
 Route::post('quotation_edit',[QuatationController::class,'quotation_edit'] );
-Route::post('update_quotation',[QuatationController::class,'update_quotation'] );
+Route::post('update_quotation',[QuatationController::class,'update_quatation'] );
 Route::post('remove_quotation',[QuatationController::class,'remove_quotation']);
 Route::get('invoice_quotation',[QuatationController::class,'invoice_genrate'])->name('invoice_quotation_back');
 
@@ -279,7 +281,7 @@ Route::post('remove_purchase_return',[PurchaseReturnController::class,'remove'])
 Route::get('add_sale_return',[SaleReturnController::class,'show']);
 Route::post('add_sale_return_show',[SaleReturnController::class,'store']);
 Route::get('sale_return',[SaleReturnController::class,'index']);
-Route::post('store_sale_return',[SaleReturnController::class,'update']);
+Route::post('store_sale_return',[SaleReturnController::class,'store_sale_return']);
 Route::post('add_sale_return',[SaleReturnController::class,'store_sale_return']);
 Route::post('remove_bill_return',[SaleReturnController::class,'remove_bill_return']);
 Route::post('bill_return_edit',[SaleReturnController::class,'bill_return_edit']);

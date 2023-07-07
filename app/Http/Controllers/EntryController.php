@@ -95,16 +95,11 @@ class EntryController extends Controller
                 $entity->qty = $request->qty;
                 $entity->save();
 
-                return $entity;
+                //   dd($entity->id);
 
+                $db_entry = entity::where(['id'=> $entity->id])->with('product')->get();
 
-
-
-
-
-
-
-
+                return $db_entry;
 
     }
 

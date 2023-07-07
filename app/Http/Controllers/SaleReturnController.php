@@ -22,7 +22,7 @@ class saleReturnController extends Controller
     public function index()
     {
         $sale = saleReturn::all();
-        return view('admin.sale_return',['sale'=>$sale]);
+        return view('admin.saleReturn.sale_return',['sale'=>$sale]);
     }
 
     /**
@@ -45,6 +45,7 @@ class saleReturnController extends Controller
     public function store(Request $request)
     {
 
+        // dd($request->all());
         $brand = brand::all();
         $category = category::all();
         $product = product::all();
@@ -211,21 +212,15 @@ class saleReturnController extends Controller
 
     public function store_sale_return(Request $request){
 
-        // dd($request->all());
+
         $name = $request->name;
         foreach($name as $key => $data){
-         $product_plus = entry::where(['id'=> $data])->first();
+         $product_plus = entry::where(['product_id'=> $data , 'branch_id'=> $request->branch])->first();
          if($product_plus -> count()){
-
-            dd($product_plus);
-
-         $id = $product_plus->id;
          $db_qty =  $product_plus->qty;
          $updated_qty = $db_qty +  $request->qty[$key];
-         $modal = product::find($id);
-         $modal->qty = $updated_qty;
-         $modal->save();
-
+         $product_plus->qty = $updated_qty;
+         $product_plus->update();
           }
 
             $model = new saleReturn;
@@ -235,17 +230,15 @@ class saleReturnController extends Controller
             $model->discount = $request->discount;
             $model->discount_type = $request->discount_type;
             $model->client_name = $request->client_name;
-            $model->number = $request->number;
-            $model->brand_id = $request->brand[$key];
-            $model->category_id = $request->category[$key];
             $model->price = $request->price[$key];
             $model->qty = $request->qty[$key];
-            $model->unit = $request->unit[$key];
             $model->bill_number = $request->bill_number;
             $model->status = 0;
             $model->save();
 
         }
+
+          bill::where(['bill_number'=>$request->bill_number])->delete();
 
         $result = saleReturn::where(['bill_number'=>$request->bill_number])->with('category','brand','branch','product')->get();
 

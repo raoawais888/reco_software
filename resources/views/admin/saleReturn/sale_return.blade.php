@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('main-content')
-    
+
 @if(session()->get('success'))
 
 
@@ -30,7 +30,7 @@
         <form method='POST' >
           @csrf
         <div class="modal-body" id="bill_data">
-          
+
         </div>
 
         </form>
@@ -59,14 +59,14 @@
                 </div>
                 <div class="col-md-2">
 
-{{--                     
+{{--
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Add bill</button>
                      --}}
-         
+
                 </div>
             </div>
-          
-          
+
+
 
           <div class="row my-4">
             <!-- Small table -->
@@ -85,45 +85,45 @@
                         <th class="text-center">bill Number</th>
                         <th class="text-center">status</th>
                         <th class="text-center">View</th>
-                        <th class="text-center">Edit</th>
+                        {{-- <th class="text-center">Edit</th> --}}
                         <th class="text-center">Remove</th>
                       </tr>
                     </thead>
                      <tbody>
                         @php
-                        $sr=0;    
+                        $sr=0;
                         @endphp
                         @foreach ($sale->unique('bill_number') as $data)
                         @php
-                            $sr++; 
+                            $sr++;
                         @endphp
-                           
-                        
+
+
                       <tr>
                         <td>{{$sr}}</td>
                         <td>{{$data->date}}</td>
                         <td>{{$data->client_name}}</td>
                         <td>{{$data->number}}</td>
                         <td>{{$data->bill_number}}</td>
-                        
+
                         @if ($data->status ==1)
-                            
+
                         <td>Paid</td>
                         @else
                         <td>Unpaid</td>
                         @endif
 
                         <td> <a class="btn btn-success btn-sm" href="{{url('invoice_bill_return',[$data->bill_number])}}" id="bill_view" data-bvid="{{$data->bill_number}}">View</a></td>
-                        <td>
+                        {{-- <td>
                           <a class="btn btn-primary btn-sm" href="#" id="bill_return_edit" data-breid="{{$data->bill_number}}">Edit</a></td>
-                        <td>
+                        <td> --}}
                           <a class="btn btn-danger btn-sm" href="#" id="bill_return_remove" data-brrid="{{$data->bill_number}}">Remove</a></td>
-                        
+
                       </tr>
                       @endforeach
-                      
-                      
-                    </tbody>   
+
+
+                    </tbody>
                   </table>
                 </div>
               </div>
@@ -132,7 +132,7 @@
         </div> <!-- .col-12 -->
       </div> <!-- .row -->
     </div> <!-- .container-fluid -->
-    
+
   </main> <!-- main -->
 </div> <!-- .wrapper -->
 <script src="{{asset('js/jquery.min.js')}}"></script>
@@ -182,7 +182,7 @@ if(data==1){
 
 
   });
- 
+
 }
 })
 

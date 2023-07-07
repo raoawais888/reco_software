@@ -10,7 +10,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalCenterTitle">All Sale  Return</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close model_close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -27,6 +27,39 @@
     </div>
   </div>
 </div>
+
+
+
+{{-- sale return view show  start  --}}
+
+<button type="button" class="btn btn-primary d-none" id="show_modal_view" data-toggle="modal" data-target="#exampleModalCenter1">
+    Launch demo modal
+  </button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form id='add_sale_return_from' method="POST">
+          @csrf
+        <div class="modal-body" id="sale_return_view">
+
+        </div>
+      </form>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" id="sale_return_save" class="btn btn-primary">Return Bill</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{{-- sale return view show  end  --}}
+
 <main role="main" class="main-content">
     <div class="container-fluid">
       <div class="row justify-content-center">
@@ -124,7 +157,8 @@ $.ajax({
     data:form,
     success:function(data){
     //  console.log(data);
-  $("#sale_return_data").html(data);
+
+ $("#sale_return_data").html(data);
    $("#show_modal_box").trigger("click");
 
 
@@ -145,6 +179,7 @@ $.ajax({
 $("#sale_return_save").on("click",function(e){
   e.preventDefault();
 
+  alert("hello");
   $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -154,13 +189,10 @@ $("#sale_return_save").on("click",function(e){
     data:$("#add_sale_return_from").serialize(),
     success:function(data){
 
-      if(data==1){
-        Swal.fire(
-            'Sale Return Added',
-            '',
-            'success'
-          )
-      }
+        $("#sale_return_view").html(data);
+        $("#show_modal_view").trigger("click");
+
+
     }
 
 

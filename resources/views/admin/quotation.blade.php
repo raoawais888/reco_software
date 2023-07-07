@@ -424,7 +424,7 @@ body{
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <form method='POST'  id="edit_form">
+        <form method='POST'  id="edit_form_q">
           @csrf
         <div class="modal-body" id="bill_data">
 
@@ -515,9 +515,9 @@ body{
 
                         <td> <a class="btn btn-success btn-sm text-white" href="{{url('invoice_bill',[$data->bill_number])}}" id="bill_view" data-bvid="{{$data->bill_number}}">View</a></td>
                         <td>
-                          <a class="btn btn-primary btn-sm" href="#" id="bill_edit" data-beid="{{$data->bill_number}}">Edit</a></td>
+                          <a class="btn btn-primary btn-sm" href="#" id="q_edit" data-beid="{{$data->bill_number}}">Edit</a></td>
                         <td>
-                          <a class="btn btn-danger btn-sm" href="#" id="bill_remove" data-brid="{{$data->bill_number}}">Remove</a></td>
+                          <a class="btn btn-danger btn-sm" href="#" id="q_remove" data-brid="{{$data->bill_number}}">Remove</a></td>
 
                       </tr>
                       @endforeach
@@ -664,13 +664,13 @@ let id = $(this).attr("id");
 
     $(document).ready(function(){
 
-        $("#edit_form").on("submit",function(e){
+        $("#edit_form_q").on("submit",function(e){
       e.preventDefault();
       $.ajax({
 
-        url:"{{url("bill")}}",
+        url:"{{url("update_quotation")}}",
         type:"POST",
-        data:$("#edit_form").serialize(),
+        data:$("#edit_form_q").serialize(),
         beforeSend:function(){
        $("#loader_stock").css("visibility","visible");
 },
@@ -758,6 +758,83 @@ $(document).ready(function(e){
 
   })
 
+
+// Quatation edit
+
+
+  $(document).on("click","#q_edit",function(e){
+
+let id = $(this).attr("data-beid");
+
+
+$.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    url:"{{url('quotation_edit')}}",
+    type:"POST",
+    data:{id:id},
+    success:function(data){
+    $("#bill_data").html(data);
+    $("#bill_edit_btn").trigger("click");
+
+    $('.js-example-basic-single').select2({
+      tags: true
+    });
+    }
+
+});
+});
+// bill paid code start
+
+
+
+// remove Quatation start
+$(document).on("click","#q_remove",function(e){
+
+e.preventDefault();
+let id = $(this).attr("data-brid");
+
+Swal.fire({
+title: 'Are you sure?',
+text: "You won't be able to revert this!",
+icon: 'warning',
+showCancelButton: true,
+confirmButtonColor: '#3085d6',
+cancelButtonColor: '#d33',
+confirmButtonText: 'Yes, delete it!'
+}).then((result) => {
+if (result.isConfirmed) {
+
+  $.ajax({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  },
+  url:"{{url('remove_quotation')}}",
+  type:"POST",
+  data:{id:id},
+  success:function(data){
+if(data==1){
+    Swal.fire(
+    'Deleted!',
+    '',
+    'success'
+  )
+  location.reload();
+
+}
+  }
+
+
+  });
+
+}
+})
+
+
+
+})
+// remove Quatation end
 
     </script>
 @endsection

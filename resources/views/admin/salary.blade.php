@@ -152,7 +152,7 @@
               <div class="card shadow">
                 <div class="card-body">
                   <!-- table -->
-                  <table class="table  hover multiple-select-row nowrap" id="dataTable-1">
+                  <table class="table  hover multiple-select-row table-responsive" id="dataTable-1">
                     <thead>
                       <tr>
                         <th>Sr #</th>

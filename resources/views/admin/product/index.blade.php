@@ -170,7 +170,7 @@ $("#add_product_btn").on("click",function(e){
                 <a class="btn btn-danger" href="#" id="product_remove" data-prid="${data.id}">Remove</a></td>
             </tr>
         `;
-
+        $('.product_table').prepend(htmlTR);
 
 
         $('.close').trigger("click");

@@ -53,39 +53,10 @@ class QuatationController extends Controller
         $category = category::all();
         $branch = branch::all();
         $product = product::all();
-        return view('admin.add_quotation',['product'=>$product,'branch'=>$branch]);
+        return view('admin.quatation.add_quotation',['product'=>$product,'branch'=>$branch]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function paid_bill(Request $request)
-    // {
-    // $id = $request->id;
-    //   $model= bill::find($id);
-    //   $model->status =1;
-    //   $model->save();
-    //   return 1;
 
-    // }
-    // public function unpaid_bill(Request $request)
-    // {
-    //  $id = $request->id;
-    //   $model= bill::find($id);
-    //   $model->status =  0;
-    //   $model->save();
-    //   return 1;
-
-    // }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function add_quotation(Request $request)
     {
 
@@ -193,14 +164,15 @@ class QuatationController extends Controller
      * @param  \App\Models\bill  $bill
      * @return \Illuminate\Http\Response
      */
-    public function bill_edit(Request $request)
+    public function quotation_edit(Request $request)
     {
+
 
 
         $branch = branch::all();
         $product = product::all();
         $id = $request->id;
-         $result = bill::where(['bill_number'=>$id])->with('category','branch','brand','product')->get();
+         $result = quatation::where(['bill_number'=>$id])->with('category','branch','brand','product')->get();
          $output="";
 
 
@@ -407,187 +379,96 @@ $output.="
      * @param  \App\Models\bill  $bill
      * @return \Illuminate\Http\Response
      */
-    public function update_bill(Request $request)
-
+    public function update_quatation(Request $request)
     {
 
 
-
-        $name = $request->name;
+        $productName = $request->name;
         $branch = $request->branch;
         $bill = $request->bill_id;
-        $sr=0;
-        $old_bill_number = 0;
+        $sr = 0;
+
+        $old_products = [];
+        $new_products = [];
+        $products = quatation::where('bill_number', $bill)->get('product_id');
+        foreach ($products as $product) {
+          array_push($old_products, $product->product_id);
+        }
+        foreach ($productName as $newProduct) {
+          array_push($new_products, $newProduct);
+        }
+        $match_products = array_intersect($old_products, $new_products);
+        $db_diff_products = array_diff($old_products, $match_products);
+        $new_diff_products = array_diff($new_products, $old_products);
+
+
+
+        //Update existing products starts
+        if ($match_products) {
+          foreach ($match_products as $key => $data) {
+
+            quatation::where('product_id', $data)->update([
+              'unit' => $request->unit[$key],
+              'price' => $request->price[$key],
+              'qty' => $request->qty[$key],
+              'discount_type' => $request->discount_type,
+              'discount' => $request->discount,
+              'branch_id' => $request->branch,
+              'client_name' => $request->client_name,
+              'number' => $request->number
+            ]);
+          }
+        }
+        //Update existing products end
+
+        //Delete products from bill and increase quantity in product table start
+        if ($db_diff_products) {
+          foreach ($db_diff_products as $key => $product) {
+            $bill_data = quatation::where('product_id', $product)->first();
+            $bill_data->delete();
+          }
+        }
+        //Delete products from bill and increase quantity in product table end
+
         // main loop for update
-        foreach($name as $key =>  $data){
-            $sr++;
-
-              if($sr == 1){
-
-               foreach($name as $check_product){
-                if($check_product== ""){
-                    return "error_product";
-                   }
-               }
-
-            }
-
-
-
-
-
+        foreach ($new_diff_products as $key =>  $data) {
+          $sr++;
+          if ($sr == 1) {
             //  validation loop  start
-
-
-                   // check looop
-                   foreach($name as $check){
-                    $product_miuns = entry::where(['product_id'=> $check, 'branch_id'=>$branch])->first();
-                    if($product_miuns == null){
-                        $entry_modal = new entry();
-                        $entry_modal->product_id = $check;
-                        $entry_modal->date = $request->date;
-                        $entry_modal->branch_id = $branch;
-                        $entry_modal->qty = 0;
-                        $entry_modal->save();
-                        }
-
-
-                     }
-
-
-
-
-                    //  Quantity Check update bill comment code
-                    // $db_qty =  $product_miuns->qty;
-
-                    //  if($db_qty <  $request->qty[$id]){
-                    //     $pro_id = $product_miuns->product_id;
-
-                    //     $check_product = product::find($pro_id);
-                    //     $name_pro = $check_product->name;
-                    //      return Redirect()->back()->with(['stock'=>$name_pro]);
-
-                    //  }
-
-                    //  Quantity Check update bill comment code
-
-
-
-
-
-
-                //  validation loop  end
-               // check looop  enb
-
-
-
-                          //  quantity add back from entry table
-
-
-                      if($sr == 1){
-
-                        $bill_qty = bill::where(['bill_number'=>$bill])->get();
-                        $old_bill_number = $bill_qty[0]->bill_number;
-                        foreach($bill_qty as $val =>$bill_data){
-
-                            $db_qty_bill = $bill_data->qty;
-
-                            $branch_bill = $bill_data->branch_id;
-
-                            $db_product_id = $bill_data->product_id;
-
-
-                            $entry_old = entry::where(['product_id'=>$db_product_id, 'branch_id'=>$branch_bill ])->first();
-                            $update_qty = $db_qty_bill + $entry_old->qty;
-                            $entry_old->qty = $update_qty;
-                            $entry_old->update();
-
-                        }
-
-
-
-                      bill::where(['bill_number'=>$bill])->delete();
-
-
-                      }
-
-                          //  quantity add back from entry table end
-
-
-
-
-
-
-
-        // quatity minus from entry tables tart
-
-          $entry = entry::where(['product_id'=>$data, 'branch_id'=>$branch ])->first();
-          $cut_qty = $entry->qty;
-          $current_qty = $request->qty[$key];
-
-          $update_current_qty = $cut_qty - $current_qty;
-
-          $entry->qty = $update_current_qty;
-          $entry->update();
-
-         // quatity minus from entry table end
-
-
-
-
-            // bill entry add
-
-
-              $model = new bill();
-              $model->date = $request->date;
-              $model->client_name = $request->client_name;
-              $model->number = $request->number;
-              $model->bill_number = $old_bill_number;
-              $model->discount_type = $request->discount_type;
-              $model->discount = $request->discount;
-              $model->branch_id = $request->branch;
-              $model->unit = $request->unit[$key];
-              $model->product_id = $data;
-              $model->price = $request->price[$key];
-              $model->qty = $request->qty[$key];
-              $model->save();
-             }
-
-
-
-
-
-      $result = bill::where(['bill_number'=>$bill])->with('category','brand','branch','product')->get();
-
-    //   dd($result);
-
-      return view('admin.bill_invoice',['data'=>$result])->with('success','bill');
-
-
-    }
-
-
-
-
-    public function remove_bill(Request $request)
+            foreach ($new_diff_products as $check_product) {
+              if ($check_product == "") {
+                return "error_product";
+              }
+            }
+            //  validation loop end
+          }
+
+          // bill entry add
+          $model = new quatation();
+          $model->date = $request->date;
+          $model->client_name = $request->client_name;
+          $model->number = $request->number;
+          $model->bill_number = $bill;
+          $model->discount_type = $request->discount_type;
+          $model->discount = $request->discount;
+          $model->branch_id = $request->branch;
+          $model->unit = $request->unit[$key];
+          $model->product_id = $data;
+          $model->price = $request->price[$key];
+          $model->qty = $request->qty[$key];
+          $model->save();
+        }
+        $result = quatation::where(['bill_number' => $bill])->with('category', 'brand', 'branch', 'product')->get();
+        return view('admin.bill_invoice', ['data' => $result])->with('success', 'bill');
+      }
+
+
+
+
+    public function remove_quotation(Request $request)
     {
         $id = $request->id;
-
-        $bill = bill::where(['bill_number'=>$id])->get();
-
-        foreach($bill as $key => $data){
-            $p_id = $data->product_id;
-            $branch = $data->branch_id;
-            $entry = entry::where(['product_id'=>$p_id, 'branch_id'=>$branch])->first();
-            $current_qty = $data->qty;
-            $old_qty = $entry->qty;
-            $updat_qty = $old_qty + $current_qty;
-            $entry->qty = $updat_qty;
-            $entry->update();
-
-        }
-
-         bill::where(['bill_number'=>$id])->delete();
+        quatation::where(['bill_number'=>$id])->delete();
         return 1;
     }
 

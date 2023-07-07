@@ -134,7 +134,7 @@
                             <div class="card shadow">
                                 <div class="card-body">
                                     <!-- table -->
-                                    <table class="table datatables" id="dataTable-1">
+                                    <table class="table datatables entry_table" id="dataTable-1">
                                         <thead>
                                             <tr class="bg-primary">
                                                 <th>Sr #</th>
@@ -241,9 +241,25 @@
 
     },
     success:function(data){
+        console.log(data);
+        const htmlTR = `
 
+    <tr role="row" class="odd">
+        <td class="sorting_1">Added</td>
+        <td>${data[0].date}</td>
+        <td>${data[0].product.name}</td>
+        <td>${data[0].qty}</td>
+
+        <td>  <a class="btn btn-success" href="#" id="entry_edit"  data-eeid="${data[0].id}">Edit</a></td>
+        <td>
+
+        <a class="btn btn-danger" href="#" id="entry_remove" data-erid="${data[0].id}">Remove</a></td>
+    </tr>
+   `;
+      $("#entry_from").trigger("reset");
         Swal.fire('Entry Added','','success');
         $(".close").trigger("click");
+        $('.entry_table').prepend(htmlTR);
     }
 
 
